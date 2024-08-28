@@ -20,7 +20,7 @@ const REDIRECT_URL =  process.env.REDIRECT_URL;
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
-app.get("/",(res)=>{
+app.get("/",(req,res)=>{
     res.send("hii")
 })
 
