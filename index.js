@@ -20,6 +20,10 @@ const REDIRECT_URL =  process.env.REDIRECT_URL;
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
+app.get("/",(res)=>{
+    res.send("hii")
+})
+
 // Step 1: Generate Auth Code URL
 app.get('/generate-auth-url', (req, res) => {
     const authUrl = fyers.generateAuthCode();
