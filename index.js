@@ -1,6 +1,8 @@
 const express = require('express');
 const fyersModel = require('fyers-api-v3').fyersModel;
 const app = express();
+require('dotenv').config();
+
 const port = 8000;
 
 // Middleware to parse JSON requests
