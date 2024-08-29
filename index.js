@@ -24,14 +24,6 @@ fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
 
-// Step 2: Handle the callback and exchange auth code for access token
-function getprofile(){
-    fyers.get_profile().then((response) => {
-        res.json(response);
-    }).catch((err) => {
-        res.status(500).json({ message: "Error fetching profile", error: err });
-    });
-}
 app.get('/', (req, res) => {
     const authCode = req.query.auth_code;
 
