@@ -2,6 +2,7 @@ const express = require('express');
 const fyersModel = require('fyers-api-v3').fyersModel;
 const app = express();
 require('dotenv').config();
+const axios = require("axios");
 
 const port = 8000;
 
@@ -27,9 +28,17 @@ app.get("/",(req,res)=>{
 })
 
 // Step 1: Generate Auth Code URL
-app.get('/generate-auth-url', (req, res) => {
+app.get('/generate-auth-url', async (req, res) => {
     const authUrl = fyers.generateAuthCode();
-    res.json({ url: authUrl });
+    // res.json({ url: authUrl });
+    try{
+        let response= axios.get(authUrl);
+        let alldata= await response;
+        console.log(alldata.data);
+        res.send({"authUrl":authUrl});
+    }catch(e){
+        console.log(e)
+    }
 });
 
 // Step 2: Handle the callback and exchange auth code for access token
@@ -59,11 +68,16 @@ app.get('/callback', (req, res) => {
 
 // Step 3: Get Account Profile Information
 app.get('/profile', (req, res) => {
-    fyers.get_profile().then((response) => {
-        res.json(response);
-    }).catch((err) => {
-        res.status(500).json({ message: "Error fetching profile", error: err });
-    });
+    const authUrl = fyers.generateAuthCode();
+    console.log(authUrl);
+    res.redirect(authUrl);
+    // var authcode="authcode generated above"
+    // fyers.get_profile().then((response) => {
+    //     res.json(response);
+    // }).catch((err) => {
+    //     res.status(500).json({ message: "Error fetching profile", error: err });
+    // });
+    res.send("hii")
 });
 
 // Start the server
