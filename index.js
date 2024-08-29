@@ -24,7 +24,7 @@ fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
 
-app.get('/', (req, res) => {
+app.get('/callback', (req, res) => {
     const authCode = req.query.auth_code;
 
     if (!authCode) {
