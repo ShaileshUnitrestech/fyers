@@ -11,8 +11,8 @@ app.use(express.json());
 
 // Initialize Fyers API
 const fyers = new fyersModel({
-    path: "./", // Save logs in the current working directory
-    enableLogging: true
+    path: "./",
+    enableLogging: false
 });
 
 // Set your App ID and Redirect URL
@@ -68,8 +68,9 @@ app.get('/callback', (req, res) => {
 
 // Step 3: Get Account Profile Information
 app.get('/profile', (req, res) => {
+
     const authUrl = fyers.generateAuthCode();
-    console.log(authUrl);
+    // console.log(authUrl);W
     res.redirect(authUrl);
     // var authcode="authcode generated above"
     // fyers.get_profile().then((response) => {
@@ -77,7 +78,6 @@ app.get('/profile', (req, res) => {
     // }).catch((err) => {
     //     res.status(500).json({ message: "Error fetching profile", error: err });
     // });
-    res.send("hii")
 });
 
 // Start the server
