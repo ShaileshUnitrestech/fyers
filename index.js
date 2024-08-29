@@ -41,7 +41,7 @@ function get_access_token(auth_code){
 })
 }
 
-app.get('/callback', (req, res) => {
+app.get('/', (req, res) => {
     
     const authCode = req.query.auth_code;
     console.log("shailesh",authCode)
