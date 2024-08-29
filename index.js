@@ -23,9 +23,6 @@ const REDIRECT_URL =  process.env.REDIRECT_URL;
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
-app.get("/",(req,res)=>{
-    res.send("hii")
-})
 
 // Step 1: Generate Auth Code URL
 app.get('/generate-auth-url', async (req, res) => {
@@ -42,7 +39,7 @@ app.get('/generate-auth-url', async (req, res) => {
 });
 
 // Step 2: Handle the callback and exchange auth code for access token
-app.get('/callback', (req, res) => {
+app.get('/', (req, res) => {
     const authCode = req.query.auth_code;
 
     if (!authCode) {
