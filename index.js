@@ -50,8 +50,8 @@ app.get('/', (req, res) => {
     }
     try{
         get_access_token(authCode);
-        let data= getprofile(res)
-        res.send({"data":data})
+        getprofile(res)
+        // res.send({"data":data})
     }
     catch(e){
         console.log(e)
