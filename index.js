@@ -23,26 +23,16 @@ const REDIRECT_URL =  process.env.REDIRECT_URL;
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
-app.get("/",(req,res)=>{
-    res.send("hii")
-})
-
-// Step 1: Generate Auth Code URL
-app.get('/generate-auth-url', async (req, res) => {
-    const authUrl = fyers.generateAuthCode();
-    // res.json({ url: authUrl });
-    try{
-        let response= axios.get(authUrl);
-        let alldata= await response;
-        console.log(alldata.data);
-        res.send({"authUrl":authUrl});
-    }catch(e){
-        console.log(e)
-    }
-});
 
 // Step 2: Handle the callback and exchange auth code for access token
-app.get('/callback', (req, res) => {
+function getprofile(){
+    fyers.get_profile().then((response) => {
+        res.json(response);
+    }).catch((err) => {
+        res.status(500).json({ message: "Error fetching profile", error: err });
+    });
+}
+app.get('/', (req, res) => {
     const authCode = req.query.auth_code;
 
     if (!authCode) {
@@ -57,7 +47,10 @@ app.get('/callback', (req, res) => {
         if (response.s == 'ok') {
             const accessToken = response.access_token;
             fyers.setAccessToken(accessToken);
-            res.json({ message: "Access Token generated", accessToken });
+
+            let data= getprofile();
+            res.json({ data: data });
+            // res.json({ message: "Access Token generated", accessToken });
         } else {
             res.status(400).json({ message: "Error generating access token", error: response });
         }
