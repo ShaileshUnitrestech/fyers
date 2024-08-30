@@ -6,8 +6,7 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "node_modules/fyers-api-v3/HSM_Package/**/*",
-          "node_modules/fyers-api-v3/HSM/mapper.js"
+          "node_modules/fyers-api-v3/**/*"
         ]
       }
     }
