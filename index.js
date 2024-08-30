@@ -18,18 +18,21 @@ const fyers = new fyersModel({
 // Set your App ID and Redirect URL
 const APP_ID = process.env.APP_ID; 
 const SECRET_KEY = process.env.SECRET_KEY; 
-const REDIRECT_URL =  process.env.REDIRECT_URL; 
+const REDIRECT_URL = process.env.REDIRECT_URL; 
 
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
+let accessToken; // Declare globally to use in multiple routes
+
+// Step 3: Get Account Profile Information
 app.get('/profile-info', (req, res) => {
     if (!accessToken) {
         return res.status(400).json({ message: "Access token is missing" });
     }
 
     fyers.get_profile().then((response) => {
-        if(response.s === 'ok') {
+        if (response.s === 'ok') {
             res.json(response);
         } else {
             res.status(400).json({ message: "Error fetching profile", error: response });
@@ -39,35 +42,24 @@ app.get('/profile-info', (req, res) => {
     });
 });
 
-function get_access_token(auth_code){
-    fyers.generate_access_token({"client_id":APP_ID,"secret_key":SECRET_KEY,"auth_code":auth_code}).then((response)=>{
-    if(response.s=='ok'){
-        fyers.setAccessToken(response.access_token)
-    }else{
-        console.log("error generating access token",response)
-    }
-})
-}
-
+// Step 2: Handle the callback and exchange auth code for access token
 app.get('/', (req, res) => {
-    
     const authCode = req.query.auth_code;
-    console.log("shailesh",authCode)
+
     if (!authCode) {
         return res.status(400).json({ message: "Auth code not found in callback" });
     }
+
     fyers.generate_access_token({
         client_id: APP_ID,
         secret_key: SECRET_KEY,
         auth_code: authCode
     }).then((response) => {
         if (response.s === 'ok') {
-            const accessToken = response.access_token;
+            accessToken = response.access_token; // Store the access token globally
             fyers.setAccessToken(accessToken);
 
-            // Store or manage the access token here if needed
-            
-            // Redirect to fetch profile
+            // Redirect to fetch profile after setting the token
             res.redirect('/profile-info');
         } else {
             res.status(400).json({ message: "Error generating access token", error: response });
@@ -77,18 +69,10 @@ app.get('/', (req, res) => {
     });
 });
 
-// Step 3: Get Account Profile Information
+// Step 1: Generate Auth Code URL and redirect to Fyers login
 app.get('/profile', (req, res) => {
-
     const authUrl = fyers.generateAuthCode();
-    // console.log(authUrl);
-    res.redirect(authUrl);
-    // var authcode="authcode generated above"
-    // fyers.get_profile().then((response) => {
-    //     res.json(response);
-    // }).catch((err) => {
-    //     res.status(500).json({ message: "Error fetching profile", error: err });
-    // });
+    res.redirect(authUrl); // Redirect to Fyers login
 });
 
 // Start the server
