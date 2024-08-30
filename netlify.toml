@@ -1,0 +1,8 @@
+[build]
+  functions = "functions"
+  publish = "public" # Adjust this if you have static files to serve
+
+[[redirects]]
+  from = "/*"
+  to = "/api/:splat"
+  status = 200
