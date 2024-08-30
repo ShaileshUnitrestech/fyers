@@ -23,13 +23,21 @@ const REDIRECT_URL =  process.env.REDIRECT_URL;
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
 
-function getprofile(res){
+app.get('/profile-info', (req, res) => {
+    if (!accessToken) {
+        return res.status(400).json({ message: "Access token is missing" });
+    }
+
     fyers.get_profile().then((response) => {
-        res.json(response);
+        if(response.s === 'ok') {
+            res.json(response);
+        } else {
+            res.status(400).json({ message: "Error fetching profile", error: response });
+        }
     }).catch((err) => {
         res.status(500).json({ message: "Error fetching profile", error: err });
     });
-}
+});
 
 function get_access_token(auth_code){
     fyers.generate_access_token({"client_id":APP_ID,"secret_key":SECRET_KEY,"auth_code":auth_code}).then((response)=>{
@@ -48,15 +56,25 @@ app.get('/', (req, res) => {
     if (!authCode) {
         return res.status(400).json({ message: "Auth code not found in callback" });
     }
-    try{
-        get_access_token(authCode);
-        getprofile(res)
-        // res.send({"data":data})
-    }
-    catch(e){
-        console.log(e)
-        res.send({"error":e});
-    }
+    fyers.generate_access_token({
+        client_id: APP_ID,
+        secret_key: SECRET_KEY,
+        auth_code: authCode
+    }).then((response) => {
+        if (response.s === 'ok') {
+            const accessToken = response.access_token;
+            fyers.setAccessToken(accessToken);
+
+            // Store or manage the access token here if needed
+            
+            // Redirect to fetch profile
+            res.redirect('/profile-info');
+        } else {
+            res.status(400).json({ message: "Error generating access token", error: response });
+        }
+    }).catch(err => {
+        res.status(500).json({ message: "Internal Server Error", error: err });
+    });
 });
 
 // Step 3: Get Account Profile Information
