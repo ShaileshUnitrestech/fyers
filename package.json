@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build":"netlify deploy --prod"
+    "build": "cp -r node_modules/fyers-api-v3/HSM_Package ./"
   },
   "keywords": [],
   "author": "",
