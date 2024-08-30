@@ -3,8 +3,6 @@ const fyersModel = require('fyers-api-v3').fyersModel;
 const app = express();
 require('dotenv').config();
 const axios = require("axios");
-// Example of requiring hslib.js
-const hslib = require('./node_modules/fyers-api-v3/HSM_Package/hslib');
 
 
 const port = 8000;
