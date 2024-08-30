@@ -4,7 +4,7 @@ const app = express();
 require('dotenv').config();
 const axios = require("axios");
 
-const port = 8000;
+const port = process.env.PORT || 8000; // Use the port provided by Vercel
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -18,7 +18,7 @@ const fyers = new fyersModel({
 // Set your App ID and Redirect URL
 const APP_ID = process.env.APP_ID; 
 const SECRET_KEY = process.env.SECRET_KEY; 
-const REDIRECT_URL = process.env.REDIRECT_URL; 
+const REDIRECT_URL =  process.env.REDIRECT_URL; 
 
 fyers.setAppId(APP_ID);
 fyers.setRedirectUrl(REDIRECT_URL);
@@ -75,7 +75,4 @@ app.get('/profile', (req, res) => {
     res.redirect(authUrl); // Redirect to Fyers login
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+module.exports = app; // Vercel will automatically handle this
