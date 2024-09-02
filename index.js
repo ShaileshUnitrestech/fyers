@@ -43,7 +43,7 @@ app.get('/profile-info', (req, res) => {
 });
 
 // Step 2: Handle the callback and exchange auth code for access token
-app.get('/', (req, res) => {
+app.get('/fyers/callback', (req, res) => {
     const authCode = req.query.auth_code;
 
     if (!authCode) {
